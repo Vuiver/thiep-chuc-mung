@@ -82,41 +82,6 @@
       100% { transform: translate(35px, 50px) scale(1.18); }
     }
 
-    /* Tap for Music Banner (nếu trình duyệt di động chặn autoplay) */
-    .music-banner {
-      position: absolute;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 60;
-      background: rgba(255, 65, 108, 0.90);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      padding: 11px 24px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.45);
-      color: #fff;
-      font-size: 0.95rem;
-      font-weight: 800;
-      box-shadow: 0 8px 24px rgba(255, 65, 108, 0.45);
-      cursor: pointer;
-      pointer-events: auto;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      animation: pulseBanner 1.8s infinite;
-      white-space: nowrap;
-    }
-
-    .music-banner.hidden {
-      opacity: 0;
-      pointer-events: none;
-      transform: translateX(-50%) translateY(24px);
-    }
-
-    @keyframes pulseBanner {
-      0%, 100% { transform: translateX(-50%) scale(1); }
-      50% { transform: translateX(-50%) scale(1.05); }
-    }
-
     /* Floating Tiny Audio Toggle (Góc trên cùng bên phải) */
     .audio-btn-corner {
       position: absolute;
@@ -171,11 +136,6 @@
 
   <!-- 3D Canvas -->
   <div id="canvas-container"></div>
-
-  <!-- Tap to Play Music Banner (tự động ẩn khi nhạc đã chạy) -->
-  <div class="music-banner hidden" id="music-banner">
-    <span>🎵 Chạm vào màn hình để nghe nhạc sinh nhật 🎂</span>
-  </div>
 
   <!-- Tiny Audio Control -->
   <button class="audio-btn-corner music-pulse" id="audio-btn" title="Bật/Tắt nhạc">🎵</button>
@@ -240,20 +200,19 @@
     }
 
     /* =========================================================================
-       2. AUDIO CONTROLLER (PHÁT NGAY LẬP TỨC & CHỐNG CHẬM TRỄ)
+       2. AUDIO CONTROLLER (TỰ ĐỘNG PHÁT NGAY LẬP TỨC - KHÔNG CẦN BẤM NÚT)
        ========================================================================= */
     const audioBtn = document.getElementById('audio-btn');
-    const musicBanner = document.getElementById('music-banner');
     let isMusicPlaying = false;
     let audioCtx = null;
 
     function initAudioContext() {
       if (!audioCtx) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (AudioContext) audioCtx = new AudioContext();
+        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtxClass) audioCtx = new AudioCtxClass();
       }
       if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
+        audioCtx.resume().catch(() => {});
       }
     }
 
@@ -278,6 +237,7 @@
 
     function tryPlayMusic() {
       initAudioContext();
+      bgMusic.muted = false;
       bgMusic.volume = 0.95;
       const playPromise = bgMusic.play();
       if (playPromise !== undefined) {
@@ -285,39 +245,47 @@
           isMusicPlaying = true;
           audioBtn.textContent = '🔊';
           audioBtn.classList.remove('music-pulse');
-          if (musicBanner) musicBanner.classList.add('hidden');
+          removeGestureListeners();
         }).catch(() => {
+          // Trình duyệt chặn autoplay khi chưa có tương tác -> chờ tương tác đầu tiên không hiện bất kỳ nút nào
           isMusicPlaying = false;
           audioBtn.textContent = '🎵';
           audioBtn.classList.add('music-pulse');
-          // Nếu trình duyệt chặn unmuted autoplay, hiện banner nhắc chạm nhẹ
-          if (musicBanner) musicBanner.classList.remove('hidden');
         });
       }
     }
 
-    // 1. Thử phát ngay tức thì khi script nạp xong
+    // 1. Tự động phát ngay lập tức khi vào trang qua nhiều sự kiện
     tryPlayMusic();
+    window.addEventListener('DOMContentLoaded', tryPlayMusic);
+    window.addEventListener('load', tryPlayMusic);
+    window.addEventListener('pageshow', tryPlayMusic);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && !isMusicPlaying) tryPlayMusic();
+    });
+    // Hỗ trợ webview (WeChat / Zalo / In-app)
+    document.addEventListener('WeixinJSBridgeReady', tryPlayMusic, false);
 
-    // 2. Tự động phát ngay ở lần chạm/cuộn đầu tiên bất kỳ trên màn hình
+    // 2. Kích hoạt tức thì ở cử chỉ chạm/lướt/cuộn màn hình đầu tiên (hoàn toàn âm thầm, không cần nút)
     function unlockAudioOnGesture() {
       if (!isMusicPlaying) {
         tryPlayMusic();
       }
     }
-    const GESTURE_EVENTS = ['pointerdown', 'touchstart', 'touchend', 'click', 'scroll', 'keydown'];
+    const GESTURE_EVENTS = ['pointerdown', 'touchstart', 'touchend', 'touchmove', 'mousedown', 'click', 'scroll', 'keydown'];
     GESTURE_EVENTS.forEach((evt) => {
       window.addEventListener(evt, unlockAudioOnGesture, { passive: true, capture: true });
       document.addEventListener(evt, unlockAudioOnGesture, { passive: true, capture: true });
     });
 
-    if (musicBanner) {
-      musicBanner.addEventListener('click', (e) => {
-        e.stopPropagation();
-        tryPlayMusic();
+    function removeGestureListeners() {
+      GESTURE_EVENTS.forEach((evt) => {
+        window.removeEventListener(evt, unlockAudioOnGesture, { capture: true });
+        document.removeEventListener(evt, unlockAudioOnGesture, { capture: true });
       });
     }
 
+    // Nút góc phải dùng bật/tắt thủ công nếu người dùng muốn dừng nhạc
     audioBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       initAudioContext();
@@ -326,7 +294,6 @@
         isMusicPlaying = true;
         audioBtn.textContent = '🔊';
         audioBtn.classList.remove('music-pulse');
-        if (musicBanner) musicBanner.classList.add('hidden');
       } else {
         bgMusic.pause();
         isMusicPlaying = false;
