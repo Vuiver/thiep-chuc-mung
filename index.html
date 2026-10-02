@@ -135,6 +135,10 @@
     const OCCASION_TITLE = urlParams.get('title') || cfg.occasionTitle || "Chúc Mừng Sinh Nhật";
     const MUSIC_URL = urlParams.get('music') || cfg.musicUrl || "happy-birthday.mp3";
 
+    if (RECIPIENT_NAME) {
+      document.title = `🎉 ${OCCASION_TITLE} - ${RECIPIENT_NAME} 🎂`;
+    }
+
     // Danh sách ảnh kỷ niệm (Polaroid 3D)
     let PHOTOS = cfg.photos || [];
     if (urlParams.get('img')) {
@@ -142,7 +146,7 @@
     }
 
     // Danh sách lời chúc
-    const WISH_LIST = (cfg.messages && cfg.messages.length > 0) ? cfg.messages : [
+    let WISH_LIST = (cfg.messages && cfg.messages.length > 0) ? [...cfg.messages] : [
       "🎂 HAPPY BIRTHDAY 🎂",
       "Chúc Mừng Sinh Nhật! 👑",
       "Tuổi Mới Rực Rỡ & Thăng Hoa ✨",
@@ -154,6 +158,10 @@
       "Trẻ Mãi Không Già 🌸",
       "Tỏa Sáng Theo Cách Riêng 🌟"
     ];
+    if (urlParams.get('to')) {
+      const customName = urlParams.get('to');
+      WISH_LIST.unshift(`🎂 HAPPY BIRTHDAY ${customName.toUpperCase()} 🎂`, `👑 Chúc Mừng Sinh Nhật ${customName}! 👑`);
+    }
 
     const PALETTES = [
       ["#ff416c", "#ff4b2b"], ["#f7971e", "#ffd200"], ["#ff758c", "#ff7eb3"],

@@ -2,26 +2,19 @@
  * =========================================================================
  * CẤU HÌNH THIỆP CHÚC MỪNG 3D (THIEP-CHUC-MUNG CONFIG)
  * =========================================================================
- * Bạn có thể dễ dàng tùy biến thiệp cho bất kỳ dịp nào:
- * - Sinh nhật, Kỷ niệm ngày yêu / ngày cưới (Anniversary), Valentine, 8/3, 20/10, Tết...
- * - Thêm tên người nhận, ảnh kỷ niệm, đổi bài hát, đổi lời chúc...
+ * Chủ đề: Chúc mừng sinh nhật anh Xà Bông Hoàng 🎂
  */
 
 const CARD_CONFIG = {
   // 1. THÔNG TIN NGƯỜI NHẬN & DỊP KỶ NIỆM
-  recipientName: "Sếp Việt", // Tên người nhận (ví dụ: "Việt Nguyễn", "Quỳnh Anh", "Bố Mẹ"...)
-  occasionTitle: "Chúc Mừng Sinh Nhật", // Dịp kỷ niệm (ví dụ: "Happy Birthday", "Happy Anniversary", "Valentine Day"...)
+  recipientName: "Anh Xà Bông Hoàng",
+  occasionTitle: "Chúc Mừng Sinh Nhật",
 
-  // 2. NHẠC NỀN (File MP3 cục bộ hoặc link trực tuyến)
-  musicUrl: "happy-birthday.mp3", // Thay file mp3 hoặc dán link nhạc mp3 bất kỳ
+  // 2. NHẠC NỀN
+  musicUrl: "happy-birthday.mp3",
 
   // 3. ẢNH KỶ NIỆM (Hiển thị dạng khung ảnh Polaroid 3D rơi lơ lửng)
-  // Bạn có thể dán link ảnh trực tuyến (imgur, cdn, github) hoặc đường dẫn tương đối
-  photos: [
-    // Ví dụ:
-    // "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=400",
-    // "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400"
-  ],
+  photos: [],
 
   // 4. BẬT / TẮT CÁC LOẠI QUÀ 3D
   giftSettings: {
@@ -34,57 +27,57 @@ const CARD_CONFIG = {
     giftDensity: 28            // Số lượng quà cáp rơi đồng thời
   },
 
-  // 5. DANH SÁCH LỜI CHÚC (50 câu chúc chọn lọc, có thể sửa tự do)
+  // 5. DANH SÁCH LỜI CHÚC DÀNH RIÊNG CHO ANH XÀ BÔNG HOÀNG
   messages: [
-    "🎂 HAPPY BIRTHDAY 🎂",
-    "Chúc Mừng Sinh Nhật Sếp! 👑",
-    "Tuổi Mới Rực Rỡ & Thăng Hoa ✨",
-    "Tiền Vào Như Nước Sông Đà 💰",
-    "Tiền Ra Nhỏ Giọt Cà Phê Phin ☕",
-    "Thành Công Bứt Phá Mọi Giới Hạn 🚀",
-    "Vạn Sự Như Ý - Tỷ Sự Như Mơ 🍀",
-    "Công Việc Thuận Buồm Xuôi Gió ⛵",
-    "Ký Hợp Đồng Mỏi Tay 📝",
-    "Doanh Thu Đột Phá X10 📈",
-    "Sếp Mãi Đỉnh - Đỉnh Của Chóp 🏔️",
-    "Sự Nghiệp Lên Như Diều Gặp Gió 🪁",
-    "Một Năm Đầy Ắp Cơ Hội Vàng 🏆",
-    "Bản Lĩnh Vững Vàng Trước Sóng Gió 🌊",
-    "Tài Lộc Dồi Dào Quanh Năm 💎",
-    "Sức Khỏe Vô Biên - Tinh Thần Thép 💪",
-    "Trẻ Khỏe Năng Động Mỗi Ngày 🏃‍♂️",
-    "Nụ Cười Luôn Nở Trên Môi 😄",
-    "Tràn Đầy Năng Lượng Tích Cực ⚡",
-    "Trẻ Mãi Không Già - Đẹp Trai Bất Chấp 😎",
-    "Tâm Hồn Luôn Thanh Thản An Nhiên 🍃",
-    "Bình An Trong Từng Giây Phút 🕊️",
-    "Cuộc Sống An Lạc & Hạnh Phúc 🌸",
-    "Trái Tim Luôn Tràn Ngập Tình Yêu ❤️",
-    "Gia Đình Ấm Êm Hạnh Phúc Viên Mãn 👨‍👩‍👧‍👦",
-    "Tình Yêu Thăng Hoa Ngọt Ngào 💖",
-    "Đi Đâu Cũng Gặp Quý Nhân 🌟",
-    "Ước Gì Được Nấy - Cầu Được Ước Thấy 🎁",
-    "Shopping Không Cần Nhìn Giá 🛍️",
-    "Du Lịch Khắp Năm Châu Bốn Bể ✈️",
-    "Ăn Chơi Hết Mình - Làm Hết Sức 🥂",
-    "Xe Sang - Nhà Đẹp - Đời Nở Hoa 🚗",
-    "Phong Độ Là Nhất Thời - Đẳng Cấp Là Mãi Mãi 👑",
-    "Ví Luôn Dày Cộm Tiền Mặt & Thẻ 💳",
-    "Số Đỏ Quanh Năm - Vận May Gõ Cửa 🎰",
-    "Tự Do Tài Chính - Thảnh Thơi Hưởng Thụ 🍹",
-    "Mỗi Ngày Là Một Bữa Tiệc Rực Rỡ 🎉",
-    "Tuổi Mới Bớt Cọc - Thêm Giàu 😆",
-    "Deadline Tự Biến Mất - Task Tự Xong 🪄",
-    "Tài Khoản Ting Ting Liên Hồi 📲",
-    "Luôn Là Ngôi Sao Sáng Nhất Buổi Tiệc 🌠",
-    "Ngồi Không Tiền Cũng Rơi Trúng Đầu 💸",
-    "Tỏa Sáng Rực Rỡ Theo Phong Cách Riêng 💫",
-    "Vượt Qua Mọi Thách Thức Thần Kỳ ⚡",
-    "Đón Nhận Cơn Mưa Tài Lộc & May Mắn 🌧️",
-    "Hôm Nay Bạn Là Nhân Vật Chính 🎉",
-    "Mọi Ước Nguyện Đều Thành Hiện Thực 🕯️",
-    "Happy Birthday To An Amazing Soul 🎂",
-    "Tuổi Mới - Vận Hội Mới - Thắng Lợi Mới 🏆",
-    "Happy Birthday - Vạn Dặm Bình An! 🌈"
+    "🎂 HAPPY BIRTHDAY ANH XÀ BÔNG HOÀNG 🎂",
+    "👑 Chúc Mừng Sinh Nhật Anh Xà Bông Hoàng! 👑",
+    "✨ Tuổi Mới Thơm Tho Rực Rỡ - Vạn Sự Hanh Thông ✨",
+    "🧼 Xà Bông Hoàng Mãi Đỉnh - Tẩy Sạch Mọi Âu Lo 💎",
+    "💰 Tiền Vào Như Nước Sông Đà - Đếm Tiền Gãy Cả Tay 💵",
+    "☕ Tiền Ra Nhỏ Giọt Cà Phê Phin ☕",
+    "🚀 Sự Nghiệp Thăng Hoa - Đỉnh Cao Bứt Phá 📈",
+    "🌟 Phong Độ Ngời Ngời - Đẹp Trai Bất Chấp Thời Gian 😎",
+    "💪 Sức Khỏe Vô Biên - Tinh Thần Thép 💪",
+    "🏆 Một Năm Rực Rỡ - Bội Thu Thắng Lợi 🏆",
+    "⛵ Công Việc Thuận Buồm Xuôi Gió - Trăm Trận Trăm Thắng ⚔️",
+    "📝 Ký Hợp Đồng Mỏi Tay - Khách Hàng Tấp Nập 📑",
+    "🍀 Vạn Sự Như Ý - Tỷ Sự Như Mơ 🍀",
+    "💎 Tài Lộc Bùng Nổ - Số Dư Ting Ting Liên Tục 📲",
+    "🚗 Xe Sang Nhà Đẹp - Cuộc Sống Nở Hoa 🏡",
+    "👨‍👩‍👧‍👦 Gia Đình Ấm Êm - Tràn Ngập Tiếng Cười ❤️",
+    "🥂 Hôm Nay Anh Hoàng Là Ngôi Sao Sáng Nhất 🥂",
+    "🎉 Tuổi Mới Bớt Cọc - Thêm Giàu - Cười Nhiều Hơn 🥳",
+    "🕊️ Bình An Trong Tâm Hồn - An Nhiên Mỗi Ngày 🍃",
+    "🌟 Quý Nhân Phù Trợ - Đi Đâu Cũng Được Yêu Quý 🌟",
+    "🎁 Cầu Được Ước Thấy - Vạn Điều Tốt Lành 🎁",
+    "✈️ Du Lịch Bốn Phương - Thảnh Thơi Hưởng Thụ 🏖️",
+    "🛍️ Shopping Thả Ga - Không Cần Nhìn Giá 💳",
+    "🍻 Nhậu Ngàn Chén Không Say - Anh Em Gắn Kết 🍻",
+    "🌈 Bọt Xà Bông Lấp Lánh - Đời Tươi Như Cầu Vồng 🌈",
+    "🧼 Tắm Trong Tiền Bạc - Thơm Ngát Vinh Quang 💎",
+    "👑 Đẳng Cấp Là Mãi Mãi - Anh Hoàng Là Duy Nhất 👑",
+    "🔥 Ý Tưởng Bùng Nổ - Dự Án Nào Cũng Thắng Lớn 💡",
+    "🪄 Deadline Tự Biến Mất - Task Nào Cũng Xong Xuôi 🪄",
+    "🎯 Nhắm Đâu Trúng Đó - Đạt Mọi KPI 🎯",
+    "🍰 Ăn Bánh Sinh Nhật Tẹt Ga - Không Sợ Tăng Cân 🎂",
+    "💸 Ngồi Không Tiền Cũng Rơi Trúng Đầu 💸",
+    "❤️ Tình Cảm Thăng Hoa - Đời Đẹp Như Mơ 💖",
+    "⚡ Năng Lượng Đầy Bình - Bứt Phá Mọi Giới Hạn ⚡",
+    "🌈 Vạn Dặm Bình An - Triệu Niềm Vui Gõ Cửa 🌈",
+    "😄 Nụ Cười Rạng Rỡ - May Mắn Ngập Tràn 😄",
+    "🍾 Khui Champagne Ăn Mừng Sinh Nhật Rực Rỡ 🍾",
+    "🏔️ Tuổi Mới Đón Vận Hội Mới - Chinh Phục Đỉnh Cao 🏔️",
+    "🎈 Tuổi Mới Tự Do - Phóng Khoáng - Yêu Đời 🎈",
+    "🥇 Luôn Là Phiên Bản Xuất Sắc Nhất Của Chính Mình 🥇",
+    "🌟 Đại Ca Xà Bông Hoàng Sinh Nhật Vui Vẻ! 🌟",
+    "💎 Kim Cương Bất Hoại - Vững Vàng Trước Sóng Gió 🌊",
+    "☕ Sáng Thong Thả Cafe - Chiều Đếm Tiền Mỏi Tay ☕",
+    "🏄‍♂️ Lướt Trên Mọi Sóng Gió Một Cách Điệu Nghệ 🏄‍♂️",
+    "🎯 Mục Tiêu Năm Nay X2 - Doanh Số Bứt Phá X10 🚀",
+    "🥳 Quẩy Hết Mình Cùng Anh Em Trong Ngày Sinh Nhật 🥳",
+    "🍀 Số Đỏ Quanh Năm - Vận May Luôn Bên Cạnh 🍀",
+    "🏡 Đất Đai Thẳng Cánh Cò Bay - Sổ Đỏ Xếp Chồng 🏡",
+    "👑 Đại Gia Xà Bông Hoàng - Trùm Phong Độ 👑",
+    "🎂 Happy Birthday Anh Hoàng - Tuổi Mới Đại Thắng! 🎂"
   ]
 };
