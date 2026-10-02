@@ -14,7 +14,9 @@ const CARD_CONFIG = {
   musicUrl: "happy-birthday.mp3",
 
   // 3. ẢNH KỶ NIỆM (Hiển thị dạng khung ảnh Polaroid 3D rơi lơ lửng)
-  photos: [],
+  photos: [
+    "anh-xa-bong-hoang.jpg"
+  ],
 
   // 4. BẬT / TẮT CÁC LOẠI QUÀ 3D
   giftSettings: {

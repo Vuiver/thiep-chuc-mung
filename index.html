@@ -43,19 +43,32 @@
       z-index: 1;
     }
 
-    /* Ambient Dynamic Glow */
-    .bg-gradient {
+    /* Background Photo Layer */
+    .bg-photo-layer {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 30%, #250a3d 0%, #11041f 55%, #05010a 100%);
+      background-image: url('anh-xa-bong-hoang.jpg');
+      background-size: cover;
+      background-position: center 25%;
+      background-repeat: no-repeat;
       z-index: 0;
+      opacity: 0.85;
+      filter: saturate(1.12) contrast(1.06);
+    }
+
+    .bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 36%, rgba(12, 4, 24, 0.26) 0%, rgba(9, 3, 18, 0.68) 72%, rgba(5, 1, 10, 0.90) 100%);
+      z-index: 0;
+      pointer-events: none;
     }
 
     .orb {
       position: absolute;
       border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0.42;
+      filter: blur(70px);
+      opacity: 0.28;
       pointer-events: none;
       z-index: 0;
       animation: floatOrb 10s infinite alternate ease-in-out;
@@ -69,17 +82,52 @@
       100% { transform: translate(35px, 50px) scale(1.18); }
     }
 
+    /* Tap for Music Banner (nếu trình duyệt di động chặn autoplay) */
+    .music-banner {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 60;
+      background: rgba(255, 65, 108, 0.90);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 11px 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 800;
+      box-shadow: 0 8px 24px rgba(255, 65, 108, 0.45);
+      cursor: pointer;
+      pointer-events: auto;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: pulseBanner 1.8s infinite;
+      white-space: nowrap;
+    }
+
+    .music-banner.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%) translateY(24px);
+    }
+
+    @keyframes pulseBanner {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.05); }
+    }
+
     /* Floating Tiny Audio Toggle (Góc trên cùng bên phải) */
     .audio-btn-corner {
       position: absolute;
       top: 16px;
       right: 16px;
       z-index: 50;
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.16);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       color: #fff;
@@ -87,14 +135,14 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
       transition: all 0.25s ease;
     }
 
     .audio-btn-corner:hover {
       transform: scale(1.1);
-      background: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.28);
     }
 
     .music-pulse {
@@ -109,17 +157,25 @@
 </head>
 <body>
 
-  <!-- Audio Element -->
-  <audio id="bg-music" src="happy-birthday.mp3" loop preload="auto"></audio>
+  <!-- Audio Element (playsinline, autoplay, preload=auto) -->
+  <audio id="bg-music" src="happy-birthday.mp3" loop autoplay playsinline preload="auto"></audio>
 
-  <!-- Background Lights -->
-  <div class="bg-gradient"></div>
+  <!-- Background Photo of Anh Xà Bông Hoàng -->
+  <div class="bg-photo-layer" id="bg-photo"></div>
+  <div class="bg-overlay"></div>
+
+  <!-- Ambient Lights -->
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
 
   <!-- 3D Canvas -->
   <div id="canvas-container"></div>
+
+  <!-- Tap to Play Music Banner (tự động ẩn khi nhạc đã chạy) -->
+  <div class="music-banner hidden" id="music-banner">
+    <span>🎵 Chạm vào màn hình để nghe nhạc sinh nhật 🎂</span>
+  </div>
 
   <!-- Tiny Audio Control -->
   <button class="audio-btn-corner music-pulse" id="audio-btn" title="Bật/Tắt nhạc">🎵</button>
@@ -177,23 +233,28 @@
       bg: PALETTES[idx % PALETTES.length]
     }));
 
-    // Cập nhật nhạc nền từ config
+    // Cập nhật nhạc nền từ config (chỉ đổi nếu khác để không gián đoạn preload)
     const bgMusic = document.getElementById('bg-music');
-    bgMusic.src = MUSIC_URL;
+    if (bgMusic.getAttribute('src') !== MUSIC_URL) {
+      bgMusic.src = MUSIC_URL;
+    }
 
     /* =========================================================================
-       2. AUDIO CONTROLLER
+       2. AUDIO CONTROLLER (PHÁT NGAY LẬP TỨC & CHỐNG CHẬM TRỄ)
        ========================================================================= */
     const audioBtn = document.getElementById('audio-btn');
+    const musicBanner = document.getElementById('music-banner');
     let isMusicPlaying = false;
     let audioCtx = null;
 
     function initAudioContext() {
       if (!audioCtx) {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AudioContext();
+        if (AudioContext) audioCtx = new AudioContext();
       }
-      if (audioCtx.state === 'suspended') audioCtx.resume();
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
     }
 
     function playPopSound() {
@@ -217,30 +278,45 @@
 
     function tryPlayMusic() {
       initAudioContext();
-      bgMusic.volume = 0.85;
+      bgMusic.volume = 0.95;
       const playPromise = bgMusic.play();
       if (playPromise !== undefined) {
         playPromise.then(() => {
           isMusicPlaying = true;
           audioBtn.textContent = '🔊';
           audioBtn.classList.remove('music-pulse');
+          if (musicBanner) musicBanner.classList.add('hidden');
         }).catch(() => {
           isMusicPlaying = false;
           audioBtn.textContent = '🎵';
           audioBtn.classList.add('music-pulse');
+          // Nếu trình duyệt chặn unmuted autoplay, hiện banner nhắc chạm nhẹ
+          if (musicBanner) musicBanner.classList.remove('hidden');
         });
       }
     }
 
+    // 1. Thử phát ngay tức thì khi script nạp xong
+    tryPlayMusic();
+
+    // 2. Tự động phát ngay ở lần chạm/cuộn đầu tiên bất kỳ trên màn hình
     function unlockAudioOnGesture() {
-      if (!isMusicPlaying) tryPlayMusic();
-      window.removeEventListener('pointerdown', unlockAudioOnGesture);
-      window.removeEventListener('touchstart', unlockAudioOnGesture);
-      window.removeEventListener('click', unlockAudioOnGesture);
+      if (!isMusicPlaying) {
+        tryPlayMusic();
+      }
     }
-    window.addEventListener('pointerdown', unlockAudioOnGesture, { passive: true });
-    window.addEventListener('touchstart', unlockAudioOnGesture, { passive: true });
-    window.addEventListener('click', unlockAudioOnGesture, { passive: true });
+    const GESTURE_EVENTS = ['pointerdown', 'touchstart', 'touchend', 'click', 'scroll', 'keydown'];
+    GESTURE_EVENTS.forEach((evt) => {
+      window.addEventListener(evt, unlockAudioOnGesture, { passive: true, capture: true });
+      document.addEventListener(evt, unlockAudioOnGesture, { passive: true, capture: true });
+    });
+
+    if (musicBanner) {
+      musicBanner.addEventListener('click', (e) => {
+        e.stopPropagation();
+        tryPlayMusic();
+      });
+    }
 
     audioBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -250,6 +326,7 @@
         isMusicPlaying = true;
         audioBtn.textContent = '🔊';
         audioBtn.classList.remove('music-pulse');
+        if (musicBanner) musicBanner.classList.add('hidden');
       } else {
         bgMusic.pause();
         isMusicPlaying = false;
