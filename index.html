@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>🎉 Thiệp Chúc Mừng 3D - Cơn Mưa Lời Chúc & Quà Cáp 🎂</title>
   <meta name="description" content="Thiệp chúc mừng 3D tương tác không gian: Lời chúc rực rỡ, gấu bông, bó hoa tươi, hộp quà, bánh kem và âm nhạc du dương.">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@700;800;900&family=Mali:wght@700&display=swap" rel="stylesheet">
@@ -110,14 +113,6 @@
       background: rgba(255, 255, 255, 0.28);
     }
 
-    .music-pulse {
-      animation: musicPulse 1.4s infinite;
-    }
-
-    @keyframes musicPulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 117, 140, 0.7); }
-      50% { box-shadow: 0 0 0 10px rgba(255, 117, 140, 0); }
-    }
   </style>
 </head>
 <body>
@@ -138,7 +133,7 @@
   <div id="canvas-container"></div>
 
   <!-- Tiny Audio Control -->
-  <button class="audio-btn-corner music-pulse" id="audio-btn" title="Bật/Tắt nhạc">🎵</button>
+  <button class="audio-btn-corner" id="audio-btn" title="Bật/Tắt âm thanh">🔊</button>
 
   <script>
     /* =========================================================================
@@ -244,13 +239,9 @@
         playPromise.then(() => {
           isMusicPlaying = true;
           audioBtn.textContent = '🔊';
-          audioBtn.classList.remove('music-pulse');
           removeGestureListeners();
         }).catch(() => {
-          // Trình duyệt chặn autoplay khi chưa có tương tác -> chờ tương tác đầu tiên không hiện bất kỳ nút nào
           isMusicPlaying = false;
-          audioBtn.textContent = '🎵';
-          audioBtn.classList.add('music-pulse');
         });
       }
     }
@@ -293,7 +284,6 @@
         bgMusic.play();
         isMusicPlaying = true;
         audioBtn.textContent = '🔊';
-        audioBtn.classList.remove('music-pulse');
       } else {
         bgMusic.pause();
         isMusicPlaying = false;
